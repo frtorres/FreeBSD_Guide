@@ -1,0 +1,39 @@
+Install: FreeBSD-11-CURRENT
+FreeBSD_Guide
+Thu Jan 15 13:43:06 EST 2015
+----------------------------
+
+1. Download USB image from 
+ftp://ftp.freebsd.org/pub/FreeBSD/snapshots/amd64/amd64/ISO-IMAGES/11.0/FreeBSD-11.0-CURRENT-amd64-20150111-r276981-memstick.img
+
+2. cp <image file> /dev/sdX
+
+3. boot from USB
+
+4. Use manual partition option to define UFS slide to install.
+Create and define one slide.
+
+Auto options takes the whole disk to install (not tested).
+
+5. Configure eth card, IP V4 only, DHCP and DNS (8.8.8.8 and 192.168.1.1 (router ip) as secondary).
+
+X system install
+
+see: 
+
+6.  pkg install 
+
+7.
+
+8. 
+
+9. ports are not installed out of the box.
+   pkg install portsnap
+   portsnap fetch
+   portsnap extract (for the first time)
+   portsnap fecth; portsnap update
+
+
+
+
+

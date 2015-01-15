@@ -14,5 +14,6 @@ This is a collection of text files organized by topic, I think could be useful t
 
 Copyright 2014 FreeBSD, frtorres (frtorres) , Panama. All rights reserved.
 
-Wed Jan 14 16:25:51 COT 2014 Adapted from internet sources nrmally cited on each file by: frtorres
+Wed Jan 14 16:25:51 COT 2014 Adapted from internet sources normally cited on each file by: frtorres
+
 
