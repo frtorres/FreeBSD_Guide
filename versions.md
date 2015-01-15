@@ -1,17 +1,11 @@
-General: Version Information.
-FreeBDS_Guide
-Thu Jan 15 15:40:46 EST 2015
------------------------------
-As of: Thu Jan 15 15:40:56 EST 2015
-
 [**FreeBSD Project**](https://www.freebsd.org/)|[**Version Information**] (#FreeBSD RELEASES)
+
+As of: Thu Jan 15 15:40:56 EST 2015
 
 ##CONTENT
 
 * Tested Sustem
 * Purpose
-
-
 
 ##Tested System
 
@@ -20,7 +14,6 @@ Intel:
 ##Purpose.
 
 Set up a Machine with Kanotix / FreeBSD to access a whole disk used for home data storage by means of FreeNAS.
-
 
 ## FreeBSD RELEASES
 
