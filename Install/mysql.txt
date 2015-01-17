@@ -1,0 +1,130 @@
+Install: FreeBSD-11-CURRENT
+FreeBSD_Guide
+Fri Jan 16 22:44:26 EST 2015
+----------------------------
+
+mysql was installed automatically by mythtv.
+
+1. from ports:
+# cd /usr/ports/multimedia/mythtv
+# make install
+
+OR
+
+# cd /usr/ports/multimedia/mythfrontend
+# make install
+
+# cd /usr/ports/databases/mysqlXX-server
+# make install
+===========================================================================================
+
+From: http://www.freebsdmadeeasy.com/tutorials/web-server/install-mysql-server-on-freebsd.php
+
+2. edit /etc/rc.conf to have
+
+    mysql_enable="YES"
+
+Once this line is there you can run the start up script with
+
+    # sh /usr/local/etc/rc.d/mysql-server.sh start
+
+3. SETTING root PASSWORDS.
+
+from: http://dev.mysql.com/doc/refman/5.6/en/default-privileges.html
+
+mysql> SELECT User, Host, Password FROM mysql.user;
++------+--------------------+----------+
+| User | Host               | Password |
++------+--------------------+----------+
+| root | localhost          |          |
+| root | myhost.example.com |          |
+| root | 127.0.0.1          |          |
+| root | ::1                |          |
+|      | localhost          |          |
+|      | myhost.example.com |          |
++------+--------------------+----------+
+
+This output indicates that there are several root and anonymous-user accounts, none of which have passwords. 
+
+shell> mysql -u root
+mysql> SET PASSWORD FOR 'root'@'localhost' = PASSWORD('newpwd');
+mysql> SET PASSWORD FOR 'root'@'127.0.0.1' = PASSWORD('newpwd');
+mysql> SET PASSWORD FOR 'root'@'::1' = PASSWORD('newpwd');
+mysql> SET PASSWORD FOR 'root'@'host_name' = PASSWORD('newpwd');
+
+You can also use a single statement that assigns a password to all root accounts by using UPDATE to modify the mysql.user table directly. This method works on any platform:
+
+shell> mysql -u root
+mysql> UPDATE mysql.user SET Password = PASSWORD('newpwd')
+    ->     WHERE User = 'root';
+    mysql> FLUSH PRIVILEGES;
+
+    The FLUSH statement causes the server to reread the grant tables. Without it, the password change remains unnoticed by the server until you restart it. 
+
+Finally, set a password for regular user. (pending).
+
+
+3. # mysql -uroot -p < /usr/local/share/mythtv/database/mc.sql
+
+4. as user:  (time zone support, got an error at myth-setup)
+mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
+
+Check with:
+
+ mysql> SELECT @@global.time_zone, @@session.time_zone;
+
+ +--------------------+---------------------+
+ | @@global.time_zone | @@session.time_zone |
+ +--------------------+---------------------+
+ | SYSTEM             | SYSTEM              |
+ +--------------------+---------------------+
+ 1 row in set (0.00 sec)
+
+Check databases with:
+
+mysql> show databases;
++--------------------------+
+| Database                 |
++--------------------------+
+| information_schema       |
+| mysql                    |
+| mythconverg              |
+| performance_schema       |
+| test                     |
++--------------------------+
+5 rows in set (0.11 sec)
+# **** mythtv-setup should run ok for mysql locally NO networking , next step ****
+
+6.- From a regular user:
+
+mythtv-setup
+mythtv database is then upgraded and ~/.mythtv is created.
+
+
+5.- Setting up networkinf for mysql
+see: http://easyos.net/articles/bsd/freebsd/install_mysql_server_on_freebsd
+   
+cp /usr/local/share/mysql/my-medium.cnf /usr/local/etc/my.cnf
+cd /usr/local/etc
+chmod 0444 my.cnf
+       
+/usr/local/etc/rc.d/mysql-server restart
+
+
+6.- Set up access for mythtv user from network
+see: 
+http://www.mythtv.org/wiki/User_Manual:Initial_Installation
+http://www.mythtv.org/wiki/MythTV-HOWTO_-_0.27
+
+$ mysql -u root -p
+connect mythconverg;
+grant all privileges on *.* to 'mythtv'@'%' with grant option;
+grant all privileges on *.* to 'mythtv'@'localhost' with grant option;
+flush privileges;
+exit;
+
+$ mysql -u root mythconverg
+mysql> grant all on mythconverg.* to mythtv@"192.168.1.%" identified by "mythtv";
+mysql> flush privileges;
+
+

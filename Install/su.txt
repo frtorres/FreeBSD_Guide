@@ -1,0 +1,17 @@
+Install: nfs
+FreeBSD_Guide
+Fri Jan 16 22:44:26 EST 2015
+---------------------------
+
+0.- user must belong to group wheel
+1.-   
+pw user  mod  username -G wheel
+
+2.- To disable this behavior for all users. Open pam configuration file and comment:
+
+# vi /etc/pam.d/su
+
+Find the following line and comment it out:
+#auth requisite pam_group.so no_warn group=wheel root_only fail_safe ruser
+
+

@@ -21,8 +21,11 @@ LATEST RELEASES: Production: 10.1, 9.3, 8.4.
 
 Installed 10.1 and 9.3, gfx problems setting up X environment. See bellow.
 
-
 Troubleshooting X environment
+
+
+
+
 see: http://blogs.freebsdish.org/graphics/
 
 http://blogs.freebsdish.org/graphics/2014/11/04/vt4-enabled-by-default/
