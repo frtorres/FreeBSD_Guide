@@ -20,13 +20,17 @@ OR
 
 From: http://www.freebsdmadeeasy.com/tutorials/web-server/install-mysql-server-on-freebsd.php
 
-2. edit /etc/rc.conf to have
+1. edit /etc/rc.conf to have
 
     mysql_enable="YES"
 
 Once this line is there you can run the start up script with
 
     # sh /usr/local/etc/rc.d/mysql-server.sh start
+
+
+2. # mysql -uroot -p < /usr/local/share/mythtv/database/mc.sql
+
 
 3. SETTING root PASSWORDS.
 
@@ -63,8 +67,6 @@ mysql> UPDATE mysql.user SET Password = PASSWORD('newpwd')
 
 Finally, set a password for regular user. (pending).
 
-
-3. # mysql -uroot -p < /usr/local/share/mythtv/database/mc.sql
 
 4. as user:  (time zone support, got an error at myth-setup)
 mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql

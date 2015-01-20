@@ -1,0 +1,89 @@
+Howto: mythtv jail
+FreeNAS guide
+Mon Jan 19 17:03:03 EST 2015
+-------------------------------------------------
+
+see: http://mysticpete.blogspot.com.au/2014/03/create-media-server-hosting-freenas.html
+
+
+1. Define ZFS pool: Data-FliaTM
+2. Define user. allow sudo. add to wheel group.
+3. Activate ssh service and move switch to ON position.
+3. ssh to box. Created dir
+
+CONFIG: One Dataset=One Volume --- No new datasets defined.
+
+define directories in
+/mnt/DATA-FliaTM
+
+create:
+    /mnt/DATA-FliaTM/JAILS
+      chown -R frtorres-nas:wheel frtorres-nas/
+
+    /mnt/DATA-FliaTM/home
+
+# To store jails
+**** JAILS SHOULD BE ON ITS OWNN DATASET  *** see doc.
+needs to check size and access to external data on the maol ZFS pool.
+
+
+JAIL INFORMATION
+----------------
+root at: /mnt/DATA-FliaTM/JAILS
+     ipv4 automatic config
+DHCP:192.168.1.114
+
+Jail initial set up
+-------------------
+# jls
+# jexec 3 tcsh              ; by jail id.
+# jexec mythtv tcsh         ; by jail name.
+
+adding a user
+
+# adduser
+mythtv
+home=/var/mythtv
+
+# ports was reporting upgrade was needed.
+# tried: cd /usr/ports/ports-mgmt/pkg && make install clean, required uninstall first
+#
+# to show oudated packages 
+pkg version
+pkg version -l "<"
+#update packages
+pkg update
+pkg upgrade
+
+
+# setting up ports
+portsnap fetch
+portsnap extract
+portsnap fetch
+portsnap update
+
+# additional packages for mythtv
+cd /usr/ports/audio/lame && make install clean
+pkg install libXv                                       ;libXv has a CAPITAL 'X')
+pkg install qt4-webkit
+pkg install xauth
+pkg install xorg-fonts
+
+# install mythtv
+pkg install mythtv
+echo 'mythbackend_enable="YES"' >> /etc/rc.conf
+echo 'sshd_enable="YES"' >> /etc/rc.conf
+echo 'mysql_enable="YES"' >> /etc/rc.conf
+
+pkg install mysql55-server
+service mysql-server start | status
+
+service sshd start   ;generate keys and load service. test from 192.168.1.114
+
+
+setup root password for mythtv (see txt file).
+
+
+
+
+
