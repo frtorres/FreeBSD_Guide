@@ -80,9 +80,118 @@ service mysql-server start | status
 
 service sshd start   ;generate keys and load service. test from 192.168.1.114
 
+--------------------------------------------------------
+setup root password for mythtv.
+--------------------------------------------------------
+shell> mysql -u root
+SELECT User, Host, Password FROM mysql.user;
++------+-----------+----------+
+| User | Host      | Password |
++------+-----------+----------+
+| root | localhost |          |
+| root | mythtv    |          |
+| root | 127.0.0.1 |          |
+| root | ::1       |          |
+|      | localhost |          |
+|      | mythtv    |          |
++------+-----------+----------+
+6 rows in set (0.00 sec)
 
-setup root password for mythtv (see txt file).
 
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('lola');
+SET PASSWORD FOR 'root'@'127.0.0.1' = PASSWORD('lola');
+SET PASSWORD FOR 'root'@'::1' = PASSWORD('lola');
+SET PASSWORD FOR 'root'@'mythtv' = PASSWORD('lola');
+
+------------------------------
+mysql zoneinfo support
+-----------------------------
+mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
+
+check with:
+mysql -uroot -p
+SELECT @@global.time_zone, @@session.time_zone;
+
++--------------------+---------------------+
+| @@global.time_zone | @@session.time_zone |
++--------------------+---------------------+
+| SYSTEM             | SYSTEM              |
++--------------------+---------------------+
+1 row in set (0.00 sec)
+
+now build mythtv database:
+mysql -uroot -p < /usr/local/share/mythtv/database/mc.sql
+check with:
+mysql -uroot -p
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| mythconverg        |
+| performance_schema |
+| test               |
++--------------------+
+5 rows in set (0.00 sec)
+
+------------------------
+prepare X remote access
+-----------------------
+
+echo 'ListenAddress <youripaddress>' >> /etc/ssh/sshd_config
+echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
+echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
+
+Now from another station on the same net:
+
+ssh -X mythtv@192.168.1.114             ;# Omit notificarion about .xauth file. First time is ok if not found.
+/usr/local/bin/mythtv-setup             ;started OK!.
+
+---------------------------------------------------
+prepare mythtv database for accessing from network
+---------------------------------------------------
+
+$ mysql -u root -p
+connect mythconverg;
+grant all privileges on *.* to 'mythtv'@'%' with grant option;
+grant all privileges on *.* to 'mythtv'@'localhost' with grant option;
+grant all on mythconverg.* to mythtv@"192.168.1.%" identified by "mythtv";
+flush privileges;
+quit;
+
+-------------------------------------------------
+mysql for network FreeBSD configuration steps
+-------------------------------------------------
+cp /usr/local/share/mysql/my-medium.cnf /usr/local/etc/my.cnf
+cd /usr/local/etc
+chmod 0444 my.cnf
+vi my.cnf               ; # insert the following line
+bind-address = 192.168.1.114
+/usr/local/etc/rc.d/mysql-server restart
+
+/usr/local/etc/rc.d/mythbackend restart
+
+vi /var/mythtv/.mythtv/config.xml   ;change host IP address. this file is created after first mythtv-setup. 
+
+-------------------------------------
+storage
+-------------------------------------
+initial configuration to test
+
+root for storage:  /var/mythtv   ; ~/
+root@mythtv:/var/mythtv # mkdir -p default 
+root@mythtv:/var/mythtv # mkdir -p livetv
+root@mythtv:/var/mythtv # mkdir -p DB_BAK
+root@mythtv:/var/mythtv # mkdir -p videos
+root@mythtv:/var/mythtv # mkdir -p trailers
+root@mythtv:/var/mythtv # mkdir -p coverart
+root@mythtv:/var/mythtv # mkdir -p fanart
+root@mythtv:/var/mythtv # mkdir -p screenshots
+root@mythtv:/var/mythtv # mkdir -p banners
+
+chmod 755 default livetv DB_BAK videos trailers coverart fanart screenshots banners
+chown -hR mythtv:mythtv /var/mythtv
 
 
 

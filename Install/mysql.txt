@@ -36,6 +36,7 @@ Once this line is there you can run the start up script with
 
 from: http://dev.mysql.com/doc/refman/5.6/en/default-privileges.html
 
+shell> mysql -u root
 mysql> SELECT User, Host, Password FROM mysql.user;
 +------+--------------------+----------+
 | User | Host               | Password |
