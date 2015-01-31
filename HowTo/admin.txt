@@ -1,0 +1,21 @@
+HowTo: admin FreeBSD 
+FreeBSD_Guide
+Fri Jan 30 22:49:33 EST 2015
+--------------------
+
+Daily tasks:
+
+pkg --update
+pkg update
+pkg upgrade
+
+portsnap fetch
+portsnap update
+echo ports installed pakages with upgrades...
+pkg version -l "<"
+
+echo audit packages alerts....
+pkg audit -F
+
+
+
