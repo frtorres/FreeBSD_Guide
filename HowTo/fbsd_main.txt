@@ -1,0 +1,15 @@
+echo FreeBSD maintenance tasks
+echo packages system:
+pkg update
+pkg upgrade
+   
+portsnap fetch
+portsnap update
+
+echo ports installed pakages with upgrades...
+pkg version -l "<"
+echo        
+echo "Alertas (audit)"
+echo audit packages alerts....
+pkg audit -F
+
