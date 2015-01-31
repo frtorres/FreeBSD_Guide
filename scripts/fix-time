@@ -1,43 +1,10 @@
 #!/bin/sh
 if test $(id -u) != 0; then
-	echo Error: You must be root to run this script!
-	exit 1
+        echo Error: You must be root to run this script!
+        exit 1
 fi
-
-# Check from /etc/init.d/hwclock.sh
-if head -n 3 /etc/adjtime | tail -n 1 | grep -q '^UTC$' ; then
-    UTC="--utc"
-else
-    UTC="--localtime"
-fi
-
-while getopts luh opt; do
-    case $opt in
-        l) UTC="--localtime";;
-        u) UTC="--utc";;
-        \?|h)
-                echo "Usage $0 [options] " >&2
-                echo " -l      Force localtime" >&2
-                echo " -u      Force UTC" >&2
-                echo " -h      Show this help" >&2
-                exit 2
-	            ;;
-    esac
-done
-
-hwclock --noadjfile --hctosys $UTC
-
-if [ "$UTC" = "--utc" ]; then
-    echo "Using UTC..."
-    printf "0.0 0 0.0\n0\nUTC\n" > /etc/adjtime
-else
-    echo "Using localtime..."
-    printf "0.0 0 0.0\n0\nLOCAL\n" > /etc/adjtime
-fi
-
-NTPSERVERS="pool.ntp.org"
-
-echo NTPSERVERS=$NTPSERVERS > /etc/default/ntp-servers
-
-ntpdate -u -b $NTPSERVERS && hwclock --systohc $UTC
+tzsetup
+# see why Op not permitted. 
+#NTPSERVERS="pool.ntp.org"
+#ntpdate -u -b $NTPSERVERS 
 
